@@ -4,12 +4,6 @@ from ariadne import graphql_sync, make_executable_schema, gql, load_schema_from_
 from ariadne.constants import PLAYGROUND_HTML
 from app.models.model_db import query, mutation
 
-# from server.models.model_db import query, mutation
-# from server.model import query, mutation
-# from .model import query, mutation
-# from server.models.model import query, mutation
-
-
 import os
 
 
@@ -24,6 +18,7 @@ app = Flask(__name__,
     static_url_path='')
 
 cors = CORS(app, resources={r"/graphql": {"origins": "*"}})
+
 
 @app.route('/')
 def root():
@@ -42,10 +37,13 @@ def graphql_server():
 
     data = request.get_json()
     print('Getting the data: ', data)
+    print(schema)
+    print(request)
 
-    success, result = graphql_sync(schema,data,context_value=request, debug=app.debug)
+    success, result = graphql_sync(schema, data, context_value=request, debug=app.debug)
     status_code = 200 if success else 400
     return jsonify(result), status_code
+
 
 if __name__ == '__main__':
     app.run(debug=True)
