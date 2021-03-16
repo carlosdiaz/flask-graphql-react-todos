@@ -1,5 +1,9 @@
 import React, {useState, useEffect} from "react";
 import "./App.css";
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 
 
 function getOrders(cb) {
@@ -11,7 +15,7 @@ function getOrders(cb) {
         },
         body: JSON.stringify({
             query: `query {
-        orders {
+        todos {
           id
           name
           description
@@ -21,13 +25,12 @@ function getOrders(cb) {
         }),
     })
         .then((res) => res.json())
-        .then((res) => cb(res.data.orders))
+        .then((res) => cb(res.data.todos))
         .catch(console.error);
 }
 
 function createTodo(name, description, priority, cb) {
     console.log('Posting request');
-    console.log('Parameters: ', name, description, priority)
     fetch(`/graphql`, {
         method: "POST",
         headers: {
@@ -79,6 +82,7 @@ function OrderForm({onSubmit}) {
         description: "",
         priority: "HIGH",
     });
+
     return (
         <form onSubmit={(e) => {
             e.preventDefault();
@@ -87,39 +91,42 @@ function OrderForm({onSubmit}) {
         }} className="Form">
 
             <label>
-                <span>NAME:</span>
-                <input value={order.name} type="text"
-                       onChange={({target}) => setOrder({...order, name: target.value})}/>
+                {/*<span>Name:</span>*/}
+                <TextField value={order.name} label="Name:" type="text"
+                           onChange={({target}) => setOrder({...order, name: target.value})}/>
             </label>
-
+            <br/><br/>
             <label>
-                <span>DESCRIPTION:</span>
-                <input value={order.description} type="text"
-                       onChange={({target}) => setOrder({...order, description: target.value})}/>
+                {/*<span>Description:</span>*/}
+                <TextField value={order.description} label="Description:" type="text"
+                           onChange={({target}) => setOrder({...order, description: target.value})}/>
             </label>
+            <br/><br/>
+            {/*<span>Priority:</span>*/}
+            <Select defaultValue="HIGH" onChange={({target}) => setOrder({...order, priority: target.value})}>
 
+                <MenuItem value="HIGH">HIGH</MenuItem>
+                <MenuItem value="MEDIUM">MEDIUM</MenuItem>
+                <MenuItem value="LOW">LOW</MenuItem>
+            </Select>
+            <br/><br/>
 
-            <label>
-                <span>Priority:</span>
-                <select onChange={({target}) => setOrder({...order, priority: target.value})}>
-                    <option value="HIGH" defaultValue>HIGH</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="LOW">LOW</option>
-                </select>
-            </label>
-
-            <input type="submit" disabled={order.name === ""} value="Create TODO"/>
+            {/*<input type="submit" disabled={order.name === ""} value="Create TODO"/>*/}
+            <Button type="submit"  variant="contained" color="primary" disabled={order.name === ""}>
+                Create Task
+            </Button>
+            <br/><br/><br/><br/>
         </form>
     );
 }
 
 function Orders({orders}) {
-    console.log("Initially ", orders);
-
     if (orders) {
         return (
             <ul>
                 {orders.map((order) => (
+
+
                     <li key={order.id}>
                         {order.name} - {order.description}{" "} - {order.priority}
                     </li>
