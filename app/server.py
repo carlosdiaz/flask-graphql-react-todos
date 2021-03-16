@@ -27,18 +27,23 @@ def root():
 
 @app.route("/graphql", methods=["GET"])
 def graphql_playgroud():
-    """Serve GraphiQL playground"""
+    """
+    This method will be resolving only GET requests
+    :return:
+    """
     print("Graph playground")
     return PLAYGROUND_HTML, 200
 
 
 @app.route("/graphql", methods=["POST"])
 def graphql_server():
+    """
+    This method will be handling only POST request for demo purposes
+    :return:
+    """
 
     data = request.get_json()
     print('Getting the data: ', data)
-    print(schema)
-    print(request)
 
     success, result = graphql_sync(schema, data, context_value=request, debug=app.debug)
     status_code = 200 if success else 400

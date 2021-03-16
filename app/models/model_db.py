@@ -4,7 +4,7 @@ from uuid import uuid4
 query = QueryType()
 mutation = MutationType()
 
-orders = []
+todos = []
 
 
 class Todos:
@@ -21,9 +21,8 @@ class Todos:
         self.description = description
         self.priority = priority
 
-
-@query.field("orders")
-def resolve_orders(_, info):
+@query.field("todos")
+def resolve_todos(_, info):
     """
     This is the method that will be hit every time there's a GraphQL request
 
@@ -31,13 +30,13 @@ def resolve_orders(_, info):
     :param info:
     :return:
     """
-    print("Displaying the orders: ", orders)
+    print("Displaying the todos list: ", todos)
     print(info)
-    return orders
+    return todos
 
 
 @mutation.field("createTodo")
-def resolve_orders(_, info, name, description, priority):
+def resolve_todos(_, info, name, description, priority):
     """
     This method will be resolving every time there's a new todo task will be created
     :param _:
@@ -47,5 +46,23 @@ def resolve_orders(_, info, name, description, priority):
     :return:
     """
     new_todo_obj = Todos(name, description, priority)
-    orders.append(new_todo_obj)
+    todos.append(new_todo_obj)
     return new_todo_obj
+
+
+# @query.field("id")
+# def resolve_id(_, info):
+#
+#     if len(todos) > 0:
+#         return todos[0].id
+#     return ''
+
+
+@query.field("todo")
+def resolve_todo(*args, name=None, **kwargs):
+    for element in todos:
+        if element.name == name:
+            return element
+
+
+# def my_wrapper(*args, wrapper_argument=False, **kwargs):
