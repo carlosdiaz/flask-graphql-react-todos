@@ -1,2 +1,3 @@
 # flask-graphql-react-todos
-Small app with reactjs and python flask, graphql in the banck end
+Small application with reactjs/material UI for the Front End 
+Python flask, Ariadne and Graphql in the back end.
